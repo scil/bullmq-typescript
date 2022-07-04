@@ -2,7 +2,7 @@ import { Worker, QueueScheduler } from "bullmq";
 import { commitRepoQueueName ,connection } from "./types";
 
 
-const commitRepoWorker = new Worker(commitRepoQueueName, `${__dirname}/workers/auto-commit-git-repo.js`, {
+const commitRepoWorker = new Worker(commitRepoQueueName, `${__dirname}/workers/auto-commit-worker.js`, {
   connection,
 });
 

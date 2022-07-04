@@ -1,18 +1,13 @@
 /**
- * 运行(先创建jobs)
- *  pnpm start:producer && pm2 start ecosystem.config.js --only worker
- *
- * 或
- *
- *  pm2 start ecosystem.config.js --only "dev:worker,dev:producer"
- *  这里的 dev 命令带 watch 功能。为什么不使用pm2的watch？因为 package.json 中的 tsc-watch 可自动编译 ts 文件
+ * 运行( 先编译、创建jobs，最后运行 worker)
+ *  pnpm build && pnpm producer && pm2 start ecosystem.config.js --only bull-worker
  */
 
 
 module.exports = {
   apps: [
     {
-      name: 'worker',
+      name: 'bull-worker',
       script: './dist/index.js',
       watch: false,
     },
@@ -21,16 +16,6 @@ module.exports = {
     //   name: 'producer',
     //   script: './dist/producer.js',
     // },
-    {
-      name: 'dev:worker',
-      script: 'npm',
-      args:'run dev:worker',
-    },
-    {
-      name: 'dev:producer',
-      script: 'npm',
-      args:'run dev:producer',
-    },
   ],
 
   deploy: {
