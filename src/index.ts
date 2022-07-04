@@ -1,24 +1,20 @@
 import { Worker, QueueScheduler } from "bullmq";
-import { queueName } from "./types";
+import { commitRepoQueueName ,connection } from "./types";
 
-const connection = {
-  host: "localhost",
-  port: 6379,
-};
 
-const myQueue = new Worker(queueName, `${__dirname}/workers/my-worker.js`, {
+const commitRepoWorker = new Worker(commitRepoQueueName, `${__dirname}/workers/auto-commit-git-repo.js`, {
   connection,
 });
 
-const myQueueScheduler = new QueueScheduler(queueName, {
+const commitRepoScheduler = new QueueScheduler(commitRepoQueueName, {
   connection,
 });
 
 process.on("SIGTERM", async () => {
   console.info("SIGTERM signal received: closing queues");
 
-  await myQueue.close();
-  await myQueueScheduler.close();
+  await commitRepoWorker.close();
+  await commitRepoScheduler.close();
 
   console.info("All closed");
 });

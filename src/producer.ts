@@ -1,20 +1,33 @@
 import { Queue } from "bullmq";
-import { queueName } from "./types";
+import { commitRepoQueueName ,connection } from "./types";
 
-const connection = {
-  host: "localhost",
-  port: 6379,
-};
+import cronstrue from 'cronstrue';
 
-const myQueue = new Queue(queueName, { connection });
+/**
+ #  second (optional)
+ #   minute
+ #    hour
+ #     day of month
+ #      month
+ #       day of week
+ */
+const hours= "10,12,15,17,21";
+const cronExp = `0    ${hours}   ?     *     1-5`;
+
+const data = {repo:'K:/repos/inbornking.net'}
+
+
+const commitRepoQueue = new Queue(commitRepoQueueName, { connection });
+
 
 async function addJobs() {
-  console.log("Adding jobs...");
-  for (let i = 0; i < 10; i++) {
-    await myQueue.add("my-job", { foo: "bar" });
-  }
-  console.log("Done");
-  await myQueue.close();
+  console.log("[producer] Completely obliterates the queue and all of its contents.");
+  await commitRepoQueue.obliterate();
+  console.log(`    Adding repeat jobs with data supposed to run ${data} ${cronstrue.toString(cronExp)}`);
+  await commitRepoQueue.add(`job-${hours}`, data , { repeat: { cron: cronExp  } })
+  console.log("    jobs added Done");
+  await commitRepoQueue.close();
+  console.log("    queue closed");
 }
 
 addJobs();

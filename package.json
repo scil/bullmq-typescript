@@ -1,13 +1,17 @@
 {
   "name": "bullmq-typescript",
   "version": "1.0.0",
-  "description": "BullMQ Example for Typescript",
+  "description": "to BullMQ to auto commit git repo",
   "license": "MIT",
   "bin": "src/index.ts",
   "scripts": {
     "build": "tsc",
-    "start": "node './dist/index.js'",
-    "dev": "tsc-watch --onSuccess \"node ./dist/index.js\" | pino-pretty",
+    "start": "concurrently \"npm run start:worker\" \"npm run start:producer\"",
+    "start:worker": "node './dist/index.js'",
+    "start:producer": "node './dist/producer.js'",
+    "dev": "concurrently \"npm run dev:worker\" \"npm run dev:producer\"",
+    "dev:worker": "tsc-watch --onSuccess \"node ./dist/index.js\" | pino-pretty",
+    "dev:producer": "tsc-watch ./src/producer.ts --onSuccess \"node ./dist/producer.js\" | pino-pretty",
     "test": "ts-mocha ./tests/**/*.test.ts"
   },
   "repository": {
@@ -19,12 +23,16 @@
   ],
   "author": "Manuel Astudillo",
   "dependencies": {
-    "bullmq": "^1.85.3"
+    "bullmq": "^1.85.3",
+    "cronstrue": "^2.11.0",
+    "shelljs": "^0.8.5"
   },
   "devDependencies": {
     "@types/node": "^17.0.41",
     "chai": "^4.2.0",
+    "concurrently": "^7.2.2",
     "mocha": "^6.0.1",
+    "node-cmd": "^5.0.0",
     "ts-mocha": "^10.0.0",
     "tsc-watch": "^5.0.3",
     "typescript": "^4.7.3"
