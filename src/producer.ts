@@ -24,7 +24,7 @@ const weekDays = "1-5"
 const cronExp = ` ${seconds} ${minutes} ${hours}   ?     *   ${weekDays}  `;
 
 const data = {
-    repo: 'K:/repos/inbornking.net',
+    repo: 'K:/repos/test.net',
     demo: false,
     // logLevel: LogLevel.Log,
     logLevel: LogLevel.Trace,
